@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const productSchema = mongoose.Schema({
 	name:{
@@ -18,11 +19,41 @@ const productSchema = mongoose.Schema({
 		maxlength:255,
 	},
 	brand:{
-		required: true,
-		type: Number,
-		maxlength:255,
+		type: Schema.Types.ObjectId,
+		ref: 'Brand',
+		required: true
 	},
-})
+	shipping:{
+		type: Boolean,
+		required: true
+	},
+	available:{
+		required: true,
+		type: Boolean
+	},
+	wood:{
+		type: Schema.Types.ObjectId,
+		ref: 'Wood',
+		required: true,
+	},
+	frets:{
+		required: true,
+		type: Number
+	},
+	sold:{
+		type: Number,
+		maxlength:100,
+		default:0
+	},
+	publish:{
+		required: true,
+		type: Boolean,
+	},
+	images:{
+		default: [],
+		type: Array,
+	}
+},{timestamps:true})
 
-const Product = mongoose.model('Product')
-module.export = {Product}
+const Product = mongoose.model('Product', productSchema)
+module.exports = {Product}
