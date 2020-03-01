@@ -29,7 +29,7 @@ const RegisterLogin = () => {
           <div className="right">
 						<h2>Registered customers</h2>
 						<p>If you have an account please log in.</p>
-						<Login />
+						<Login/>
 					</div>
         </div>
       </div>
