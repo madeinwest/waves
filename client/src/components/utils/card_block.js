@@ -1,10 +1,10 @@
 import React from 'react';
 import Card from './card'
 
-export const CardBlock = (props) => {
+const CardBlock = (props) => {
 	const renderCards = () => (
 		props.list ?
-		props.list.map((card, i)=>(
+		props.list['articles'].map((card, i)=>(
 				<Card
 					key={i}
 					{...card}
@@ -27,3 +27,4 @@ export const CardBlock = (props) => {
 		</div>
 	);
 };
+export default CardBlock;

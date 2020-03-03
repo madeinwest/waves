@@ -10,6 +10,8 @@ import {getBrands, getWoods, getProductsToShop} from '../../actions/products_act
 import CollapseCheckbox from '../utils/collapseCheckbox';
 import CollapseRadio from '../utils/collapseRadio';
 
+
+import LoadmoreCards from './loadmoreCards'
 class Shop extends Component {
 
 	state = {
@@ -29,8 +31,8 @@ class Shop extends Component {
 		this.props.dispatch(getWoods())
 		this.props.dispatch(getProductsToShop(
 			this.state.skip,
-			this.state.filters,
-			this.state.limit
+			this.state.limit,
+			this.state.filters
 		))
 	}
 	handlePrice = (value) => {
@@ -50,13 +52,23 @@ class Shop extends Component {
 			let priceValues = this.handlePrice(filters)
 			newFilters[category] = priceValues
 		}
+		this.showFilteresResults(newFilters)
 		this.setState({
 			filters: newFilters
 		})
 	}
-
+	showFilteresResults = (filters) => {
+		this.props.dispatch(getProductsToShop(
+			0,
+			this.state.limit,
+			filters
+		)).then(()=>{
+			this.setState({
+				skip: 0
+			})
+		})
+	}
 	render() {
-		console.log(this.state.filters)
 		const products = this.props.products
 		return (
 			<div>
@@ -92,7 +104,18 @@ class Shop extends Component {
 							/>
 						</div>
 						<div className="right">
-							right
+							<div className="shop_options">
+								<div className="shop_grids clear">
+									grids
+								</div>
+							</div>
+							<LoadmoreCards
+								grid={this.state.grid}
+								limit={this.state.limit}
+								size={products.toShopSize}
+								products={products.toShop}
+								loadMore={()=>console.log('load more')}
+							/>
 						</div>
 					</div>
 				</div>

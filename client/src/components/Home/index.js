@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import HomeSlider from './home_slider'
 import HomePromotion from './home_promotion'
 
-import {CardBlock} from '../utils/card_block'
+import CardBlock from '../utils/card_block'
 import {connect} from 'react-redux'
 import {getProductsByArrival,getProductsBySell} from '../../actions/products_actions'
 class Home extends Component {
@@ -29,7 +29,6 @@ class Home extends Component {
 		);
 	}
 }
-
 const mapStateToProps = (state) => {
 	return {
 		products: state.products
