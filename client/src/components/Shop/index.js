@@ -12,6 +12,10 @@ import CollapseRadio from '../utils/collapseRadio';
 
 
 import LoadmoreCards from './loadmoreCards'
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faBars from '@fortawesome/fontawesome-free-solid/faBars'
+import faTh from '@fortawesome/fontawesome-free-solid/faTh'
 class Shop extends Component {
 
 	state = {
@@ -68,6 +72,21 @@ class Shop extends Component {
 			})
 		})
 	}
+	loadmoreCards = () => {
+		let skip = this.state.skip + this.state.limit;
+		this.props.dispatch(getProductsToShop(
+			skip, this.state.limit,this.state.filters,this.props.products.toShop
+		)).then(()=>{
+			this.setState({
+				skip
+			})
+		})
+	}
+	handleGrid = () => {
+		this.setState({
+			grid: !this.state.grid ? 'grid_bars' : ''
+		})
+	}
 	render() {
 		const products = this.props.products
 		return (
@@ -106,7 +125,18 @@ class Shop extends Component {
 						<div className="right">
 							<div className="shop_options">
 								<div className="shop_grids clear">
-									grids
+									<div
+										className={`grid_btn ${this.state.grid ? '' : 'active'}`}
+										onClick={()=> this.handleGrid()}
+									>
+										<FontAwesomeIcon icon={faTh}/>
+									</div>
+									<div
+										className={`grid_btn ${this.state.grid ? 'active' : ''}`}
+										onClick={()=> this.handleGrid()}
+									>
+										<FontAwesomeIcon icon={faBars}/>
+									</div>
 								</div>
 							</div>
 							<LoadmoreCards
@@ -114,7 +144,7 @@ class Shop extends Component {
 								limit={this.state.limit}
 								size={products.toShopSize}
 								products={products.toShop}
-								loadMore={()=>console.log('load more')}
+								loadMore={()=>this.loadmoreCards()}
 							/>
 						</div>
 					</div>

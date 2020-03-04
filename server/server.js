@@ -178,7 +178,7 @@ app.get('/api/product/brands',(req,res)=>{
 
 app.get('/api/users/auth',auth,(req,res)=>{
         res.status(200).json({
-            isAdmin: req.user.role === 0 ? false : true,
+            isAdmin: req.user.role !== 0 ? false : true,
             isAuth: true,
             email: req.user.email,
             name: req.user.name,
@@ -218,7 +218,7 @@ app.post('/api/users/login',(req,res)=>{
 })
 
 
-app.get('/api/user/logout',auth,(req,res)=>{
+app.get('/api/users/logout',auth,(req,res)=>{
     User.findOneAndUpdate(
         { _id:req.user._id },
         { token: '' },

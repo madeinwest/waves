@@ -14,8 +14,7 @@ const Routes = () => {
   return (
     <Layout>
       <Switch>
-        <Route path="/user/dashboard" exect component={Auth(UserDashboard, true)} />
-
+        <Route path="/user/dashboard" exect component={Auth(UserDashboard, false)} />
         <Route path="/register" exect component={Auth(Register, false)} />
         <Route path="/register_login" exect component={Auth(RegisterLogin, false)} />
         <Route path="/shop" exect component={Auth(Shop, null)} />
