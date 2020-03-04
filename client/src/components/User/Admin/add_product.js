@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import UserLayout from '../../../hoc/user'
 
 import FormField from "../../utils/Form/formfield";
-import { update, generateData, isFormValid } from "../../utils/Form/formActions";
+import { update, generateData, isFormValid,populateOptionFields } from "../../utils/Form/formActions";
 
 import {connect} from 'react-redux'
 import {getBrands, getWoods} from '../../../actions/products_actions'
@@ -68,7 +68,7 @@ class AddProduct extends Component {
         element: "select",
         value: "",
         config: {
-					label:'Product select',
+					label:'Product brand',
 					name: "select_input",
 					options:[]
         },
@@ -176,31 +176,47 @@ class AddProduct extends Component {
 			},
 		}
 	}
+	componentDidMount(){
+		const formdata = this.state.formdata
+		this.props.dispatch(getBrands()).then(resp=>{
+			const newFormdata = populateOptionFields(formdata, this.props.products.brands,'brand')
+			this.updateFields(newFormdata)
+		})
+		this.props.dispatch(getWoods()).then(resp=>{
+			const newFormdata = populateOptionFields(formdata, this.props.products.woods,'wood')
+			this.updateFields(newFormdata)
+		})
+	}
+	updateFields = (formdata) => {
+		this.setState({
+			formdata
+		})
+	}
 	submitForm = e => {
     e.preventDefault();
     let dataToSubmit = generateData(this.state.formdata, "register");
     let formIsValid = isFormValid(this.state.formdata, "register");
     if (formIsValid) {
-			this.props.dispatch(registerUser(dataToSubmit))
-			.then(resp=>{
-				if(resp.payload.success){
-					this.setState({
-						formError: false,
-						formSuccess: true
-					})
-					setTimeout(()=>{
-						this.props.history.push('/register_login')
-					},3000)
-				}else{
-					this.setState({
-						formError: true
-					})
-				}
-			}).catch(e=>{
-				this.setState({
-					formError: true
-				})
-			})
+			// this.props.dispatch(registerUser(dataToSubmit))
+			// .then(resp=>{
+			// 	if(resp.payload.success){
+			// 		this.setState({
+			// 			formError: false,
+			// 			formSuccess: true
+			// 		})
+			// 		setTimeout(()=>{
+			// 			this.props.history.push('/register_login')
+			// 		},3000)
+			// 	}else{
+			// 		this.setState({
+			// 			formError: true
+			// 		})
+			// 	}
+			// }).catch(e=>{
+			// 	this.setState({
+			// 		formError: true
+			// 	})
+			// })
     } else {
       this.setState({
         formError: true
@@ -225,6 +241,58 @@ class AddProduct extends Component {
 							change={element => this.updateForm(element)}
 							formdata={this.state.formdata.name}
 						/>
+						<FormField
+							id={"description"}
+							change={element => this.updateForm(element)}
+							formdata={this.state.formdata.description}
+						/>
+						<FormField
+							id={"price"}
+							change={element => this.updateForm(element)}
+							formdata={this.state.formdata.price}
+						/>
+						<div className="form_divider"></div>
+						<FormField
+							id={"brand"}
+							change={element => this.updateForm(element)}
+							formdata={this.state.formdata.brand}
+						/>
+						<FormField
+							id={"shipping"}
+							change={element => this.updateForm(element)}
+							formdata={this.state.formdata.shipping}
+						/>
+						<FormField
+							id={"available"}
+							change={element => this.updateForm(element)}
+							formdata={this.state.formdata.available}
+						/>
+						<div className="form_divider"></div>
+						<FormField
+							id={"wood"}
+							change={element => this.updateForm(element)}
+							formdata={this.state.formdata.wood}
+						/>
+						<FormField
+							id={"frets"}
+							change={element => this.updateForm(element)}
+							formdata={this.state.formdata.frets}
+						/>
+						<div className="form_divider"></div>
+						<FormField
+							id={"publish"}
+							change={element => this.updateForm(element)}
+							formdata={this.state.formdata.publish}
+						/>
+						{this.state.formSuccess ?
+						<div className="form_success">
+							Success
+						</div>
+							:null}
+						{this.state.formError ? (
+						<div className="error_label">Please check your data</div>
+					) : null}
+        	<button onClick={e => this.submitForm(e)}>Add product</button>
 					</form>
 				</div>
 			</UserLayout>

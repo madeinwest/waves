@@ -9,12 +9,16 @@ import Register from "./components/Register_login/register.js";
 import Shop from './components/Shop';
 
 import UserDashboard from "./components/User";
+import AddProduct from './components/User/Admin/add_product';
+
 
 const Routes = () => {
   return (
     <Layout>
       <Switch>
-        <Route path="/user/dashboard" exect component={Auth(UserDashboard, false)} />
+        <Route path="/user/dashboard" exect component={Auth(UserDashboard, true)} />
+        <Route path="/admin/add_product" exact component={Auth(AddProduct,true)}/>
+				
         <Route path="/register" exect component={Auth(Register, false)} />
         <Route path="/register_login" exect component={Auth(RegisterLogin, false)} />
         <Route path="/shop" exect component={Auth(Shop, null)} />
