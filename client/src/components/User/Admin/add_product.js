@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import UserLayout from '../../../hoc/user'
 
 import FormField from "../../utils/Form/formfield";
-import { update, generateData, isFormValid,populateOptionFields } from "../../utils/Form/formActions";
-
+import { update, generateData, isFormValid,populateOptionFields ,resetFields} from "../../utils/Form/formActions";
+import FileUpload from '../../utils/Form/fileupload'
 import {connect} from 'react-redux'
-import {getBrands, getWoods} from '../../../actions/products_actions'
+import {getBrands, getWoods, addProduct, clearProduct} from '../../../actions/products_actions'
 
 class AddProduct extends Component {
 
@@ -174,6 +174,16 @@ class AddProduct extends Component {
 				validationMsg: "",
 				showlabel: true
 			},
+			images: {
+        value: "",
+        validation: {
+          required: false
+        },
+        valid: false,
+        touched: false,
+				validationMsg: "",
+				showlabel: false
+			},
 		}
 	}
 	componentDidMount(){
@@ -192,31 +202,33 @@ class AddProduct extends Component {
 			formdata
 		})
 	}
+	resetFieldsHandler = () => {
+		const newFormdata = resetFields(this.state.formdata,"products")
+		this.setState({
+			formSuccess: true,
+			formdata: newFormdata
+		})
+		setTimeout(() => {
+			this.setState({
+				formSuccess: false
+			},()=>{
+				this.props.dispatch(clearProduct())
+			})
+		}, 3000); 
+	}
+	
 	submitForm = e => {
     e.preventDefault();
-    let dataToSubmit = generateData(this.state.formdata, "register");
-    let formIsValid = isFormValid(this.state.formdata, "register");
+    let dataToSubmit = generateData(this.state.formdata, "products");
+    let formIsValid = isFormValid(this.state.formdata, "products");
     if (formIsValid) {
-			// this.props.dispatch(registerUser(dataToSubmit))
-			// .then(resp=>{
-			// 	if(resp.payload.success){
-			// 		this.setState({
-			// 			formError: false,
-			// 			formSuccess: true
-			// 		})
-			// 		setTimeout(()=>{
-			// 			this.props.history.push('/register_login')
-			// 		},3000)
-			// 	}else{
-			// 		this.setState({
-			// 			formError: true
-			// 		})
-			// 	}
-			// }).catch(e=>{
-			// 	this.setState({
-			// 		formError: true
-			// 	})
-			// })
+			this.props.dispatch(addProduct(dataToSubmit)).then(()=>{
+				if(this.props.products.addProduct.success){
+					this.resetFieldsHandler()
+				}else{
+					this.setState({formError: true})
+				}
+			})
     } else {
       this.setState({
         formError: true
@@ -224,18 +236,33 @@ class AddProduct extends Component {
     }
   };
   updateForm = elem => {
-    const newFormdata = update(elem, this.state.formdata, "register");
+    const newFormdata = update(elem, this.state.formdata, "products");
     this.setState({
       formError: false,
       formdata: newFormdata
     });
-  };
+	};
+	imagesHandler = (images) => {
+		const newFormdata = {
+			...this.state.formdata
+		}
+		newFormdata['images'].value = images
+		newFormdata['images'].valid = true
+
+		this.setState({
+			formdata: newFormdata
+		})
+	}
 	render() {
 		return (
 			<UserLayout>
 				<div>
 					<h1>Add product</h1>
 					<form onSubmit={evt=>this.submitForm(evt)}>
+						<FileUpload
+							imagesHandler={(images)=> this.imagesHandler(images)}
+							reset = {this.setState.formSuccess}
+						/>
 						<FormField
 							id={"name"}
 							change={element => this.updateForm(element)}
