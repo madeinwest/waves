@@ -8,13 +8,31 @@ import {
 	ADD_PRODUCT,
 	CLEAR_PRODUCT,
 	ADD_BRAND,
-	ADD_WOOD
+	ADD_WOOD,
+	GET_PRODUCTS_DETAIL,
+	CLEAR_PRODUCT_DETAIL
 } from './types';
 
 import {
 	PRODUCT_SERVER
 } from '../components/utils/misc';
 
+export function getProductDetail(id){
+	const request = axios.get(`${PRODUCT_SERVER}/articles_by_id?id=${id}&type=single`)
+	.then(resp => {
+		return resp.data[0]
+	})
+	return {
+		type: GET_PRODUCTS_DETAIL,
+		payload: request
+	}
+}
+export function clearProductDetail(id){
+	return {
+		type: CLEAR_PRODUCT_DETAIL,
+		payload: ''
+	}
+}
 
 export function getProductsBySell() {
 	//?sortBy=sold&order=desc&limit=100
