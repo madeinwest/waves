@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import UserLayout from "../../hoc/user";
 import { connect } from "react-redux";
 import UserProductBlock from "../utils/User/product_block";
-import { getCartItems, removeCartItem } from "../../actions/user_actions";
+import { getCartItems, removeCartItem, onSuccessBuy} from "../../actions/user_actions";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import faFrown from "@fortawesome/fontawesome-free-solid/faFrown";
 import faSmile from "@fortawesome/fontawesome-free-solid/faSmile";
@@ -71,9 +71,18 @@ class UserCart extends Component {
 		console.log("transaction canceled")
 	}
 	onSuccess = (data) => {
-		this.setState({
-
+		this.props.dispatch(onSuccessBuy({
+			cartDetail: this.props.user.cartDetail,
+			paymentData: data
+		})).then(()=>{
+			if(this.props.user.successBuy){
+				this.setState({
+					showTotal: false,
+					showSuccess: true
+				})
+			}
 		})
+
 	}
   render() {
     return (
